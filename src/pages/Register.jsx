@@ -108,7 +108,7 @@ export default function Register() {
           <button
             onClick={handleSubmit}
             disabled={loading || !email || !password || !displayName || !confirm}
-            className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-semibold rounded-lg py-2 text-sm transition-colors"
+            className="w-full bg-primary hover:bg-green-700 disabled:opacity-50 text-white font-semibold rounded-lg py-2 text-sm transition-colors"
           >
             {loading ? 'Creando cuenta...' : 'Registrarse'}
           </button>
@@ -116,7 +116,7 @@ export default function Register() {
 
         <p className="text-sm text-center text-gray-500 mt-6">
           ¿Ya tienes cuenta?{' '}
-          <Link to="/login" className="text-green-600 font-medium hover:underline">
+          <Link to="/login" className="text-primary font-medium hover:underline">
             Inicia sesión
           </Link>
         </p>

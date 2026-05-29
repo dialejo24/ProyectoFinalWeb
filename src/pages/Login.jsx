@@ -38,8 +38,8 @@ export default function Login() {
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary">
             <AlertTriangle className="h-8 w-8 text-primary-foreground" />
           </div>
-          <h1 className="mt-4 text-2xl font-bold text-foreground">SGIU</h1>
-          <p className="text-muted-foreground">Sistema de Gestion de Incidentes Universitarios</p>
+          <h1 className="mt-4 text-2xl font-bold text-foreground">SGIU-UDLA</h1>
+          <p className="text-muted-foreground">Sistema de Gestión de Incidentes Universitarios UDLA</p>
         </div>
 
         {/* Form */}
@@ -58,7 +58,7 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                placeholder="correo@universidad.edu"
+                placeholder="correo@udla.edu.co"
               />
             </div>
 
