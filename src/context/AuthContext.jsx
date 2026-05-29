@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import { supabase } from '../supabase'
 
 export const AuthContext = createContext(null)
@@ -13,32 +13,28 @@ export function AuthProvider({ children }) {
       .from('users')
       .select('rol')
       .eq('uid', uid)
-      .single()
+      .maybeSingle()
 
-    if (error) return null
+    if (error || !data) return null
     return data.rol
   }
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        const rol = await fetchUserRole(session.user.id)
-        setUserRole(rol)
-      }
-      setLoading(false)
-    })
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        setUser(session?.user ?? null)
+
         if (session?.user) {
+          setUser(session.user)
+          setLoading(false)
           const rol = await fetchUserRole(session.user.id)
           setUserRole(rol)
         } else {
+          setUser(null)
           setUserRole(null)
+          setLoading(false)
         }
-        setLoading(false)
+
+        
       }
     )
 
@@ -48,6 +44,7 @@ export function AuthProvider({ children }) {
   async function register(email, password, displayName) {
     const { data, error } = await supabase.auth.signUp({ email, password })
     if (error) throw error
+    if (!data.user) throw new Error('No se pudo obtener el usuario.')
 
     const { error: profileError } = await supabase
       .from('users')
@@ -58,7 +55,10 @@ export function AuthProvider({ children }) {
         rol: 'usuario',
       })
 
-    if (profileError) throw profileError
+    if (profileError) throw new Error('No se pudo guardar el perfil: ' + profileError.message)
+
+    const { error: loginError } = await supabase.auth.signInWithPassword({ email, password })
+    if (loginError) throw new Error('Cuenta creada. Inicia sesión manualmente.')
   }
 
   async function login(email, password) {
