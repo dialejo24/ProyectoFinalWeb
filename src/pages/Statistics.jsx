@@ -7,6 +7,7 @@ import {
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from 'recharts'
 import { useAuthReady } from '../hooks/useAuth'
+import { printStats} from '../utils/printStats'
 const STATUS_COLORS = {
   'Reportado':  '#FCD34D',
   'En proceso': '#60A5FA',
@@ -16,7 +17,6 @@ const STATUS_COLORS = {
 const TYPE_COLORS = ['#6EE7B7', '#93C5FD', '#FCA5A5', '#FCD34D', '#C4B5FD']
 
 export default function Statistics() {
-  const printRef = useRef()
   const {user, userRole, ready} = useAuthReady()
   const [incidents, setIncidents] = useState([])
   const [loading, setLoading] = useState(true)
@@ -73,7 +73,7 @@ export default function Statistics() {
   const typeData = Object.entries(typeMap).map(([name, value]) => ({ name, value }))
 
   function handlePrint() {
-    window.print()
+    printStats({ filtered, statusData, typeData })
   }
 
   if (loading) return <AppLayout><p className="text-sm text-gray-400">Cargando estadísticas...</p></AppLayout>
@@ -81,7 +81,7 @@ export default function Statistics() {
 
   return (
     <AppLayout>
-      <div ref={printRef}>
+      <div>
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-800">Estadísticas</h1>
@@ -180,14 +180,6 @@ export default function Statistics() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @media print {
-          body * { visibility: hidden; }
-          #root * { visibility: hidden; }
-          [data-print] * { visibility: visible; }
-        }
-      `}</style>
     </AppLayout>
   )
 }
