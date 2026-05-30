@@ -1,10 +1,10 @@
 import { Navigate } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth'
+import { useAuth, useAuthReady} from '../../hooks/useAuth'
 
 export function PrivateRoute({ children, requiredRole }) {
-  const { user, userRole, loading } = useAuth()
+    const { user, userRole, loading, ready } = useAuthReady()
 
-  if (loading) {
+  if (loading || !ready) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />

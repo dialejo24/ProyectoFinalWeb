@@ -6,7 +6,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from 'recharts'
-
+import { useAuthReady } from '../hooks/useAuth'
 const STATUS_COLORS = {
   'Reportado':  '#FCD34D',
   'En proceso': '#60A5FA',
@@ -16,9 +16,8 @@ const STATUS_COLORS = {
 const TYPE_COLORS = ['#6EE7B7', '#93C5FD', '#FCA5A5', '#FCD34D', '#C4B5FD']
 
 export default function Statistics() {
-  const { user, userRole } = useAuth()
   const printRef = useRef()
-
+  const {user, userRole, ready} = useAuthReady()
   const [incidents, setIncidents] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -46,8 +45,8 @@ export default function Statistics() {
       }
     }
 
-    if (user) fetchData()
-  }, [user, userRole])
+    if (ready && user) fetchData()
+  }, [ready])
 
   function filterByPeriod(data) {
     if (period === 'all') return data

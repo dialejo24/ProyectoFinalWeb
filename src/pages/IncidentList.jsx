@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import AppLayout from '../components/layout/AppLayout'
 import { getIncidents } from '../services/incidents.service'
+import { useAuthReady } from '../hooks/useAuth'
 
 const STATUS_COLORS = {
   'Reportado':  'bg-yellow-100 text-yellow-700',
@@ -13,13 +14,12 @@ const STATUS_COLORS = {
 const FILTERS = ['Todos', 'Reportado', 'En proceso', 'Resuelto']
 
 export default function IncidentList() {
-  const { user, userRole } = useAuth()
   const [incidents, setIncidents] = useState([])
   const [filtered, setFiltered] = useState([])
   const [activeFilter, setActiveFilter] = useState('Todos')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-
+  const { user, userRole, ready } = useAuthReady()
   useEffect(() => {
     async function fetchIncidents() {
       try {
@@ -33,8 +33,8 @@ export default function IncidentList() {
       }
     }
 
-    if (user) fetchIncidents()
-  }, [user, userRole])
+    if (ready && user) fetchIncidents()
+  }, [ready])
 
   function handleFilter(filter) {
     setActiveFilter(filter)

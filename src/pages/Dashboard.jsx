@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import AppLayout from '../components/layout/AppLayout'
 import { supabase } from '../supabase'
+import { useAuthReady } from '../hooks/useAuth'
 
 const STATUS_COLORS = {
   'Reportado':  'bg-yellow-100 text-yellow-700',
@@ -11,10 +12,10 @@ const STATUS_COLORS = {
 }
 
 export default function Dashboard() {
-  const { user, userRole } = useAuth()
   const [stats, setStats] = useState({ total: 0, reportado: 0, enProceso: 0, resuelto: 0 })
   const [recent, setRecent] = useState([])
   const [loading, setLoading] = useState(true)
+  const { user, userRole, ready } = useAuthReady()
 
   useEffect(() => {
     async function fetchData() {
@@ -46,8 +47,8 @@ export default function Dashboard() {
       }
     }
 
-    if (user) fetchData()
-  }, [user, userRole])
+    if (ready && user) fetchData()
+  }, [ready])
 
   const cards = [
     { label: 'Total',      value: stats.total,     color: 'border-gray-300  bg-white' },

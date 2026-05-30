@@ -6,3 +6,9 @@ export function useAuth() {
   if (!context) throw new Error('useAuth debe usarse dentro de AuthProvider')
   return context
 }
+
+export function useAuthReady() {
+  const { user, userRole, loading } = useAuth()
+  const ready = !loading && (user === null || userRole !== null)
+  return { user, userRole, loading, ready }
+}

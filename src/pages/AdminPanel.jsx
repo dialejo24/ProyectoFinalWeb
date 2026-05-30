@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import AppLayout from '../components/layout/AppLayout'
 import { getIncidents, updateIncidentStatus } from '../services/incidents.service'
 import GroupStatusModal from '../components/incidents/GroupStatusModal'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth, useAuthReady } from '../hooks/useAuth'
 
 const STATUS_COLORS = {
   'Reportado': 'bg-yellow-100 text-yellow-700',
@@ -15,7 +15,6 @@ const STATUSES = ['Reportado', 'En proceso', 'Resuelto']
 const FILTERS = ['Todos', 'Reportado', 'En proceso', 'Resuelto']
 
 export default function AdminPanel() {
-  const { user } = useAuth()
   const [incidents, setIncidents] = useState([])
   const [filtered, setFiltered] = useState([])
   const [activeFilter, setActiveFilter] = useState('Todos')
@@ -24,11 +23,11 @@ export default function AdminPanel() {
   const [error, setError] = useState(null)
   const [showGroupModal, setShowGroupModal] = useState(false)
   const [success, setSuccess] = useState(null)
+  const { user, userRole, ready } = useAuthReady()
 
   useEffect(() => {
-
-    if (user) fetchAll()
-  }, [user])
+    if (ready && user) fetchAll()
+  }, [ready])
 
   async function fetchAll() {
     try {
