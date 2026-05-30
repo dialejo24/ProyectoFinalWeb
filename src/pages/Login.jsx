@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useAuth } from '../hooks/useAuth'
+import { useState, useEffect } from 'react'
+import { useAuth, useAuthReady } from '../hooks/useAuth'
 import { useNavigate, Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { AlertTriangle, Eye, EyeOff, Loader2 } from 'lucide-react'
@@ -7,12 +7,18 @@ import { AlertTriangle, Eye, EyeOff, Loader2 } from 'lucide-react'
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
-
+  const { user, ready } = useAuthReady()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (ready && user) {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [ready, user])
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -21,7 +27,6 @@ export default function Login() {
 
     try {
       await login(email, password)
-      navigate('/dashboard')
     } catch (err) {
       toast.error(err.email || 'No se pudo iniciar sesion. Verifica tus credenciales e intenta de nuevo.' );
       setError('Correo o contraseña incorrectos.')
@@ -33,7 +38,6 @@ export default function Login() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-8">
-        {/* Logo */}
         <div className="text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary">
             <AlertTriangle className="h-8 w-8 text-primary-foreground" />
@@ -42,7 +46,6 @@ export default function Login() {
           <p className="text-muted-foreground">Sistema de Gestión de Incidentes Universitarios UDLA</p>
         </div>
 
-        {/* Form */}
         <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
           <h2 className="mb-6 text-xl font-semibold text-foreground">Iniciar Sesion</h2>
 
