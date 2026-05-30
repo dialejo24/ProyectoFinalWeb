@@ -51,3 +51,12 @@ export async function updateIncidentStatus(id, estado) {
 
   if (error) throw new Error('No se pudo actualizar el estado: ' + error.message)
 }
+
+export async function updateMultipleIncidentStatus(ids, estado) {
+  const { error } = await supabase
+    .from('incidents')
+    .update({ estado })
+    .in('id', ids)
+
+  if (error) throw new Error('No se pudo actualizar el estado: ' + error.message)
+}

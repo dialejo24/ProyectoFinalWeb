@@ -2,16 +2,17 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import AppLayout from '../components/layout/AppLayout'
 import { getIncidents, updateIncidentStatus } from '../services/incidents.service'
+import GroupStatusModal from '../components/incidents/GroupStatusModal'
 import { useAuth } from '../hooks/useAuth'
 
 const STATUS_COLORS = {
-  'Reportado':  'bg-yellow-100 text-yellow-700',
+  'Reportado': 'bg-yellow-100 text-yellow-700',
   'En proceso': 'bg-blue-100 text-blue-700',
-  'Resuelto':   'bg-green-100 text-green-700',
+  'Resuelto': 'bg-green-100 text-green-700',
 }
 
 const STATUSES = ['Reportado', 'En proceso', 'Resuelto']
-const FILTERS  = ['Todos', 'Reportado', 'En proceso', 'Resuelto']
+const FILTERS = ['Todos', 'Reportado', 'En proceso', 'Resuelto']
 
 export default function AdminPanel() {
   const { user } = useAuth()
@@ -19,23 +20,27 @@ export default function AdminPanel() {
   const [filtered, setFiltered] = useState([])
   const [activeFilter, setActiveFilter] = useState('Todos')
   const [loading, setLoading] = useState(true)
-  const [updating, setUpdating] = useState(null) // ID del incidente actualizándose
+  const [updating, setUpdating] = useState(null)
   const [error, setError] = useState(null)
+  const [showGroupModal, setShowGroupModal] = useState(false)
+  const [success, setSuccess] = useState(null)
 
   useEffect(() => {
-    async function fetchAll() {
-      try {
-        const data = await getIncidents(user.id, 'administrador')
-        setIncidents(data)
-        setFiltered(data)
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
-    }
+
     if (user) fetchAll()
   }, [user])
+
+  async function fetchAll() {
+    try {
+      const data = await getIncidents(user.id, 'administrador')
+      setIncidents(data)
+      setFiltered(data)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   function handleFilter(filter) {
     setActiveFilter(filter)
@@ -72,17 +77,15 @@ export default function AdminPanel() {
           </p>
         </div>
       </div>
-
-      <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
+      <div className="flex justify-center sm:justify-start flex-wrap gap-2 mb-1 pb-1">
         {FILTERS.map(filter => (
           <button
             key={filter}
             onClick={() => handleFilter(filter)}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-              activeFilter === filter
-                ? 'bg-green-600 text-white'
-                : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-            }`}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${activeFilter === filter
+              ? 'bg-green-600 text-white'
+              : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+              }`}
           >
             {filter}
             {filter !== 'Todos' && (
@@ -93,10 +96,22 @@ export default function AdminPanel() {
           </button>
         ))}
       </div>
-
+      <div className="flex items-center justify-end mb-2">
+        <button
+          onClick={() => setShowGroupModal(true)}
+          className="bg-primary border border-gray-200 hover:bg-chart-2 text-primary-foreground text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+        >
+          Agrupar incidentes
+        </button>
+      </div>
       {error && (
         <div className="bg-red-50 text-red-600 text-sm rounded-lg px-4 py-3 mb-4">
           {error}
+        </div>
+      )}
+      {success && (
+        <div className="bg-green-50 text-green-700 text-sm rounded-lg px-4 py-3 mb-4">
+          {success}
         </div>
       )}
 
@@ -145,11 +160,10 @@ export default function AdminPanel() {
                       key={status}
                       onClick={() => handleStatusChange(incident.id, status)}
                       disabled={updating === incident.id || incident.estado === status}
-                      className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors disabled:opacity-40 ${
-                        incident.estado === status
-                          ? STATUS_COLORS[status]
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
+                      className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors disabled:opacity-40 ${incident.estado === status
+                        ? STATUS_COLORS[status]
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        }`}
                     >
                       {updating === incident.id && incident.estado !== status
                         ? '...'
@@ -161,6 +175,16 @@ export default function AdminPanel() {
             </div>
           ))}
         </div>
+      )}
+      {showGroupModal && (
+        <GroupStatusModal
+          onClose={() => setShowGroupModal(false)}
+          onSuccess={(msg) => {
+            setSuccess(msg)
+            fetchAll()
+            setTimeout(() => setSuccess(null), 4000)
+          }}
+        />
       )}
     </AppLayout>
   )
