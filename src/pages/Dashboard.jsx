@@ -19,7 +19,6 @@ export default function Dashboard() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // Traer incidentes del usuario (o todos si es admin)
         let query = supabase
           .from('incidents')
           .select('id, tipo_id, estado, fecha_creacion, ubicacion_texto, incident_types(nombre)')
@@ -32,7 +31,6 @@ export default function Dashboard() {
         const { data, error } = await query
         if (error) throw error
 
-        // Calcular estadísticas
         setStats({
           total:     data.length,
           reportado: data.filter(i => i.estado === 'Reportado').length,
@@ -40,7 +38,6 @@ export default function Dashboard() {
           resuelto:  data.filter(i => i.estado === 'Resuelto').length,
         })
 
-        // Últimos 5 incidentes
         setRecent(data.slice(0, 5))
       } catch (err) {
         console.error('Error cargando dashboard:', err)
@@ -61,7 +58,6 @@ export default function Dashboard() {
 
   return (
     <AppLayout>
-      {/* Encabezado */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">
@@ -77,7 +73,6 @@ export default function Dashboard() {
         </Link>
       </div>
 
-      {/* Tarjetas de resumen */}
       {loading ? (
         <div className="text-sm text-gray-400">Cargando resumen...</div>
       ) : (
@@ -91,7 +86,6 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Últimos incidentes */}
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
               <h2 className="font-semibold text-gray-700">Últimos incidentes</h2>

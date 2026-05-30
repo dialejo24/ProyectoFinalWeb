@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import AdminPanel from './pages/AdminPanel'
+import NewIncident from './pages/NewIncident'
 
 export default function App() {
   return (
@@ -23,6 +24,12 @@ export default function App() {
           <Route path="/admin" element={
             <PrivateRoute requiredRole="administrador">
               <AdminPanel />
+            </PrivateRoute>
+          } />
+
+          <Route path="/incidents/new" element={
+            <PrivateRoute>
+              <NewIncident />
             </PrivateRoute>
           } />
 
