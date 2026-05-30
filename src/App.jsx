@@ -6,6 +6,8 @@ import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import AdminPanel from './pages/AdminPanel'
 import NewIncident from './pages/NewIncident'
+import IncidentList from './pages/IncidentList'
+import IncidentDetail from './pages/IncidentDetail'
 
 export default function App() {
   return (
@@ -30,6 +32,18 @@ export default function App() {
           <Route path="/incidents/new" element={
             <PrivateRoute>
               <NewIncident />
+            </PrivateRoute>
+          } />
+
+          <Route path="/incidents" element={
+            <PrivateRoute>
+              <IncidentList />
+            </PrivateRoute>
+          } />
+
+          <Route path="/incidents/:id" element={
+            <PrivateRoute>
+              <IncidentDetail />
             </PrivateRoute>
           } />
 
