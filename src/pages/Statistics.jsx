@@ -8,13 +8,7 @@ import {
 } from 'recharts'
 import { useAuthReady } from '../hooks/useAuth'
 import { printStats} from '../utils/printStats'
-const STATUS_COLORS = {
-  'Reportado':  '#FCD34D',
-  'En proceso': '#60A5FA',
-  'Resuelto':   '#34D399',
-}
-
-const TYPE_COLORS = ['#6EE7B7', '#93C5FD', '#FCA5A5', '#FCD34D', '#C4B5FD']
+import { CHART_STATUS_COLORS, TYPE_COLORS } from '../constants'
 
 export default function Statistics() {
   const {user, userRole, ready} = useAuthReady()
@@ -143,7 +137,7 @@ export default function Statistics() {
                 <Tooltip />
                 <Bar dataKey="cantidad" radius={[6, 6, 0, 0]}>
                   {statusData.map(entry => (
-                    <Cell key={entry.name} fill={STATUS_COLORS[entry.name]} />
+                    <Cell key={entry.name} fill={CHART_STATUS_COLORS[entry.name]} />
                   ))}
                 </Bar>
               </BarChart>

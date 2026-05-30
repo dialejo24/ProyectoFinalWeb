@@ -4,12 +4,7 @@ import { useAuth } from '../hooks/useAuth'
 import AppLayout from '../components/layout/AppLayout'
 import { supabase } from '../supabase'
 import { useAuthReady } from '../hooks/useAuth'
-
-const STATUS_COLORS = {
-  'Reportado':  'bg-yellow-100 text-yellow-700',
-  'En proceso': 'bg-blue-100 text-blue-700',
-  'Resuelto':   'bg-green-100 text-green-700',
-}
+import { STATUS_COLORS } from '../constants'
 
 export default function Dashboard() {
   const [stats, setStats] = useState({ total: 0, reportado: 0, enProceso: 0, resuelto: 0 })

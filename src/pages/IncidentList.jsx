@@ -4,14 +4,7 @@ import { useAuth } from '../hooks/useAuth'
 import AppLayout from '../components/layout/AppLayout'
 import { getIncidents } from '../services/incidents.service'
 import { useAuthReady } from '../hooks/useAuth'
-
-const STATUS_COLORS = {
-  'Reportado':  'bg-yellow-100 text-yellow-700',
-  'En proceso': 'bg-blue-100 text-blue-700',
-  'Resuelto':   'bg-green-100 text-green-700',
-}
-
-const FILTERS = ['Todos', 'Reportado', 'En proceso', 'Resuelto']
+import { STATUS_COLORS, FILTERS } from '../constants'
 
 export default function IncidentList() {
   const [incidents, setIncidents] = useState([])

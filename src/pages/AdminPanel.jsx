@@ -4,15 +4,7 @@ import AppLayout from '../components/layout/AppLayout'
 import { getIncidents, updateIncidentStatus } from '../services/incidents.service'
 import GroupStatusModal from '../components/incidents/GroupStatusModal'
 import { useAuth, useAuthReady } from '../hooks/useAuth'
-
-const STATUS_COLORS = {
-  'Reportado': 'bg-yellow-100 text-yellow-700',
-  'En proceso': 'bg-blue-100 text-blue-700',
-  'Resuelto': 'bg-green-100 text-green-700',
-}
-
-const STATUSES = ['Reportado', 'En proceso', 'Resuelto']
-const FILTERS = ['Todos', 'Reportado', 'En proceso', 'Resuelto']
+import { STATUS_COLORS, STATUSES, FILTERS } from '../constants'
 
 export default function AdminPanel() {
   const [incidents, setIncidents] = useState([])
