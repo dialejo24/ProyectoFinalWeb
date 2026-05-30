@@ -8,6 +8,7 @@ import AdminPanel from './pages/AdminPanel'
 import NewIncident from './pages/NewIncident'
 import IncidentList from './pages/IncidentList'
 import IncidentDetail from './pages/IncidentDetail'
+import Statistics from './pages/Statistics'
 
 export default function App() {
   return (
@@ -47,6 +48,11 @@ export default function App() {
             </PrivateRoute>
           } />
 
+          <Route path="/statistics" element={
+            <PrivateRoute>
+              <Statistics />
+            </PrivateRoute>
+          } />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </AuthProvider>
